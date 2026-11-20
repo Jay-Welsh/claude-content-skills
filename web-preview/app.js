@@ -1,5 +1,64 @@
 const form = document.querySelector("#brief-form");
 const defaults = Object.fromEntries(new FormData(form));
+const voices = {
+  "Direct & practical": {
+    opener: "Let’s make this practical",
+    friday: "Before you close your laptop Friday, write these three lines.",
+  },
+  "Warm & conversational": {
+    opener: "Let’s talk about something you might find helpful",
+    friday:
+      "Before you head into the weekend, let’s give Monday a little breathing room.",
+  },
+  "Bold & energetic": {
+    opener: "Ready to put this into action? Here’s the starting point",
+    friday: "Close the week with a plan. Three lines, then you’re done.",
+  },
+  Inspirational: {
+    opener: "A small beginning can give you a direction. Start here",
+    friday:
+      "Give your next Monday a little direction with three lines this Friday.",
+  },
+  Empowering: {
+    opener: "You get to choose your next step. Let’s explore",
+    friday:
+      "You can decide how you start Monday. Take five minutes to choose your first move.",
+  },
+  "Educational & clear": {
+    opener: "Let’s break this down, one step at a time",
+    friday:
+      "A Friday review has three parts. Here’s what to write for each one.",
+  },
+  "Expert & confident": {
+    opener: "Start with a clear process for",
+    friday:
+      "Give your weekly review a clear structure. Capture delivery, blockers, and next actions.",
+  },
+  "Playful & witty": {
+    opener: "Let’s give this idea a little less head-scratching",
+    friday: "Leave Monday a note. Future you has enough tabs open already.",
+  },
+  "Empathetic & reassuring": {
+    opener: "If this feels like a lot, start with one manageable step",
+    friday:
+      "If this week felt scattered, take a breath. Start your review with three simple lines.",
+  },
+  "Calm & reflective": {
+    opener: "Take a moment to consider",
+    friday:
+      "Before the week ends, pause. What did you finish, and what will you carry forward?",
+  },
+  "Thought-provoking": {
+    opener: "What would you reconsider about",
+    friday:
+      "What if your Monday plan began with the things you leave unfinished on Friday?",
+  },
+  "Personal & storytelling": {
+    opener: "Picture a familiar moment. It brings us to",
+    friday:
+      "Picture Friday afternoon. Your laptop is still open, and Monday is already on your mind.",
+  },
+};
 const sampleBeats = [
   {
     name: "The hook",
@@ -104,7 +163,11 @@ function render() {
     number.textContent = String(index + 1).padStart(2, "0");
     const mark = document.createElement("i");
     mark.textContent = ["✓", "○", "↗"][index];
-    line.replaceChildren(number, document.createTextNode(paperLabels[index]), mark);
+    line.replaceChildren(
+      number,
+      document.createTextNode(paperLabels[index]),
+      mark,
+    );
   });
   const beatContainer = document.querySelector("#beats");
   beatContainer.replaceChildren();
@@ -212,6 +275,16 @@ form.addEventListener("submit", (event) => {
         overlay: brief.cta,
       },
     ];
+  }
+  const voice = voices[brief.voice];
+  if (brief.voice !== defaults.voice) {
+    hooks[0] = isExample ? voice.friday : `${voice.opener}: ${brief.topic}`;
+    hooks[1] = `${voice.opener}: ${isExample ? "your first move on Monday" : brief.topic}`;
+    hooks[2] = isExample
+      ? `${voice.friday} ${brief.cta}`
+      : `${voice.opener}. What does this look like for ${brief.audience}?`;
+    beats[0].line = hooks[0];
+    beats[0].overlay = hooks[0];
   }
   render();
   notify("Sample draft updated. Review the template before filming.");
