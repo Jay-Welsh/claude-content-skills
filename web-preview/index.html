@@ -1,56 +1,281 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Content Studio — shape your next reel from brief to storyboard.">
-  <title>Content Studio · Reel workspace</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
-</head>
-<body>
-  <aside class="sidebar">
-    <a class="brand" href="./" aria-label="Content Studio home"><span class="brand-mark">c<span>·</span></span><span>content<br>studio</span></a>
-    <div class="workspace-label">YOUR WORKSPACE</div>
-    <nav aria-label="Workspace"><a class="nav-item active" href="#workspace"><span aria-hidden="true">▦</span> Reel workspace</a><a class="nav-item" href="#brief"><span aria-hidden="true">▤</span> Brand brief</a></nav>
-    <div class="side-note"><span class="small-symbol">✳</span><p>Good content starts<br>with something to say.</p><span>Make it sound like you.</span></div>
-    <div class="sidebar-bottom"><span class="avatar">CS</span><div>Content Studio<span>Local demo workspace</span></div><span class="version">v0.1</span></div>
-  </aside>
-  <div class="main-shell" id="workspace">
-    <header class="topbar"><div>Workspace <span>/</span> <strong>New reel</strong></div><span class="demo-label">Interactive demo</span></header>
-    <main>
-      <div class="page-heading"><div><p class="eyebrow">FROM A GOOD IDEA TO A GREAT REEL</p><h1>Your next reel starts here.</h1><p class="intro">Bring the idea. Give it a voice. Make something worth watching.</p></div><button class="button secondary" id="reset">Reset example</button></div>
-      <div class="workspace-grid">
-        <section class="brief-card" id="brief" aria-labelledby="brief-heading">
-          <div class="card-heading"><span class="section-icon" aria-hidden="true">▤</span><div><h2 id="brief-heading">Set the direction</h2><p>A little context makes a better draft.</p></div></div>
-          <form id="brief-form">
-            <label for="business">Business or brand</label><input id="business" name="business" value="Monday Made Simple" required maxlength="90">
-            <label for="audience">Who are you talking to?</label><input id="audience" name="audience" value="Solo consultants juggling client projects" required maxlength="160">
-            <label for="topic">What’s the reel about?</label><textarea id="topic" name="topic" rows="3" required maxlength="400">A five-minute Friday review that helps you plan your next Monday.</textarea>
-            <div class="form-row"><div><label for="voice">Your voice</label><select id="voice" name="voice"><option>Direct & practical</option><option>Warm & conversational</option><option>Bold & energetic</option></select></div><div><label for="duration">Target length</label><select id="duration" name="duration"><option value="30">30 seconds</option><option value="45">45 seconds</option><option value="60">60 seconds</option></select></div></div>
-            <label for="cta">What should the viewer do?</label><input id="cta" name="cta" value="Save this for your next Friday review." required maxlength="180">
-            <div class="form-footnote"><span aria-hidden="true">◇</span><span>Use public or fictional details in this preview.</span></div>
-            <button class="button primary" type="submit"><span aria-hidden="true">✳</span> Build sample draft</button>
-            <p class="demo-explanation">Uses a local template. AI generation is a future integration.</p>
-          </form>
-        </section>
-        <section class="draft-area" aria-labelledby="draft-heading">
-          <div class="draft-heading"><div><span class="draft-tag">DRAFT</span><h2 id="draft-heading">The Friday reset</h2><p id="draft-meta">Monday Made Simple · Instagram Reel · 30 sec</p></div><button class="icon-button" id="download" aria-label="Download draft" title="Download draft">↓</button></div>
-          <div class="draft-content">
-            <div class="output-column">
-              <div class="tabs" role="tablist" aria-label="Draft sections"><button role="tab" aria-selected="true" aria-controls="panel-story" id="tab-story" data-tab="story">Storyboard</button><button role="tab" aria-selected="false" aria-controls="panel-hooks" id="tab-hooks" tabindex="-1" data-tab="hooks">Hooks</button><button role="tab" aria-selected="false" aria-controls="panel-caption" id="tab-caption" tabindex="-1" data-tab="caption">Caption</button></div>
-              <div id="panel-story" role="tabpanel" aria-labelledby="tab-story"><div class="panel-intro"><span>Your story, beat by beat</span><span id="beat-count">4 beats</span></div><div id="beats"></div></div>
-              <div id="panel-hooks" role="tabpanel" aria-labelledby="tab-hooks" hidden><div class="panel-intro"><span>Choose your opening</span><span>3 options</span></div><div id="hooks"></div></div>
-              <div id="panel-caption" role="tabpanel" aria-labelledby="tab-caption" hidden><div class="panel-intro"><span>Keep the conversation going</span></div><p class="caption-text" id="caption"></p><button class="button secondary" id="copy-caption">Copy caption</button></div>
-              <div class="review-note"><span aria-hidden="true">☑</span><div><strong>One more look before you film</strong><p>Check your facts, read it aloud, and make the words your own.</p></div></div>
-            </div>
-            <div class="preview-column"><div class="preview-label">REEL PREVIEW <span>9:16</span></div><div class="phone"><div class="phone-top"><span id="reel-brand">MONDAY MADE SIMPLE</span><span>•••</span></div><div class="reel-graphic"><div class="paper"><div class="paper-caption">THE FRIDAY RESET</div><div class="paper-line"><span>01</span> Delivered <i>✓</i></div><div class="paper-line"><span>02</span> Blocked <i>○</i></div><div class="paper-line"><span>03</span> First move <i>↗</i></div></div><span class="graphic-spark spark-one">✳</span><span class="graphic-spark spark-two">+</span></div><div class="reel-caption" id="reel-text">Before you close<br>your laptop Friday.</div><div class="phone-bottom"><span id="reel-time">00:00 / 00:30</span><button id="play" aria-label="Play storyboard preview">▶</button></div><div class="progress-track"><div id="progress"></div></div></div><p class="preview-hint">Animated storyboard preview<br>Final video rendering comes next.</p></div>
-          </div>
-        </section>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Content Studio — shape your next reel from brief to storyboard."
+    />
+    <title>Content Studio · Reel workspace</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="./" aria-label="Content Studio home"
+        ><span class="brand-mark">c<span>·</span></span
+        ><span>content<br />studio</span></a
+      >
+      <div class="workspace-label">YOUR WORKSPACE</div>
+      <nav aria-label="Workspace">
+        <a class="nav-item active" href="#workspace"
+          ><span aria-hidden="true">▦</span> Reel workspace</a
+        ><a class="nav-item" href="#brief"
+          ><span aria-hidden="true">▤</span> Brand brief</a
+        >
+      </nav>
+      <div class="side-note">
+        <span class="small-symbol">✳</span>
+        <p>Good content starts<br />with something to say.</p>
+        <span>Make it sound like you.</span>
       </div>
-      <footer class="page-footer"><span><span class="footer-mark">✳</span> A clear brief. An original story. Your voice.</span><span>Preview only · No account connections</span></footer>
-      <div id="status" class="toast" role="status" aria-live="polite"></div>
-    </main>
-  </div>
-</body>
+      <div class="sidebar-bottom">
+        <span class="avatar">CS</span>
+        <div>Content Studio<span>Local demo workspace</span></div>
+        <span class="version">v0.1</span>
+      </div>
+    </aside>
+    <div class="main-shell" id="workspace">
+      <header class="topbar">
+        <div>Workspace <span>/</span> <strong>New reel</strong></div>
+        <span class="demo-label">Interactive demo</span>
+      </header>
+      <main>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">FROM A GOOD IDEA TO A GREAT REEL</p>
+            <h1>Your next reel starts here.</h1>
+            <p class="intro">
+              Bring the idea. Give it a voice. Make something worth watching.
+            </p>
+          </div>
+          <button class="button secondary" id="reset">Reset example</button>
+        </div>
+        <div class="workspace-grid">
+          <section
+            class="brief-card"
+            id="brief"
+            aria-labelledby="brief-heading"
+          >
+            <div class="card-heading">
+              <span class="section-icon" aria-hidden="true">▤</span>
+              <div>
+                <h2 id="brief-heading">Set the direction</h2>
+                <p>A little context makes a better draft.</p>
+              </div>
+            </div>
+            <form id="brief-form">
+              <label for="business">Business or brand</label
+              ><input
+                id="business"
+                name="business"
+                value="Monday Made Simple"
+                required
+                maxlength="90"
+              />
+              <label for="audience">Who are you talking to?</label
+              ><input
+                id="audience"
+                name="audience"
+                value="Solo consultants juggling client projects"
+                required
+                maxlength="160"
+              />
+              <label for="topic">What’s the reel about?</label
+              ><textarea
+                id="topic"
+                name="topic"
+                rows="3"
+                required
+                maxlength="400"
+              >
+A five-minute Friday review that helps you plan your next Monday.</textarea
+              >
+              <div class="form-row">
+                <div>
+                  <label for="voice">Your voice</label
+                  ><select id="voice" name="voice">
+                    <option>Direct & practical</option>
+                    <option>Warm & conversational</option>
+                    <option>Bold & energetic</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="duration">Target length</label
+                  ><select id="duration" name="duration">
+                    <option value="30">30 seconds</option>
+                    <option value="45">45 seconds</option>
+                    <option value="60">60 seconds</option>
+                  </select>
+                </div>
+              </div>
+              <label for="cta">What should the viewer do?</label
+              ><input
+                id="cta"
+                name="cta"
+                value="Save this for your next Friday review."
+                required
+                maxlength="180"
+              />
+              <div class="form-footnote">
+                <span aria-hidden="true">◇</span
+                ><span>Use public or fictional details in this preview.</span>
+              </div>
+              <button class="button primary" type="submit">
+                <span aria-hidden="true">✳</span> Build sample draft
+              </button>
+              <p class="demo-explanation">
+                Uses a local template. AI generation is a future integration.
+              </p>
+            </form>
+          </section>
+          <section class="draft-area" aria-labelledby="draft-heading">
+            <div class="draft-heading">
+              <div>
+                <span class="draft-tag">DRAFT</span>
+                <h2 id="draft-heading">The Friday reset</h2>
+                <p id="draft-meta">
+                  Monday Made Simple · Instagram Reel · 30 sec
+                </p>
+              </div>
+              <button
+                class="icon-button"
+                id="download"
+                aria-label="Download draft"
+                title="Download draft"
+              >
+                ↓
+              </button>
+            </div>
+            <div class="draft-content">
+              <div class="output-column">
+                <div class="tabs" role="tablist" aria-label="Draft sections">
+                  <button
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="panel-story"
+                    id="tab-story"
+                    data-tab="story"
+                  >
+                    Storyboard</button
+                  ><button
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-hooks"
+                    id="tab-hooks"
+                    tabindex="-1"
+                    data-tab="hooks"
+                  >
+                    Hooks</button
+                  ><button
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-caption"
+                    id="tab-caption"
+                    tabindex="-1"
+                    data-tab="caption"
+                  >
+                    Caption
+                  </button>
+                </div>
+                <div
+                  id="panel-story"
+                  role="tabpanel"
+                  aria-labelledby="tab-story"
+                >
+                  <div class="panel-intro">
+                    <span>Your story, beat by beat</span
+                    ><span id="beat-count">4 beats</span>
+                  </div>
+                  <div id="beats"></div>
+                </div>
+                <div
+                  id="panel-hooks"
+                  role="tabpanel"
+                  aria-labelledby="tab-hooks"
+                  hidden
+                >
+                  <div class="panel-intro">
+                    <span>Choose your opening</span><span>3 options</span>
+                  </div>
+                  <div id="hooks"></div>
+                </div>
+                <div
+                  id="panel-caption"
+                  role="tabpanel"
+                  aria-labelledby="tab-caption"
+                  hidden
+                >
+                  <div class="panel-intro">
+                    <span>Keep the conversation going</span>
+                  </div>
+                  <p class="caption-text" id="caption"></p>
+                  <button class="button secondary" id="copy-caption">
+                    Copy caption
+                  </button>
+                </div>
+                <div class="review-note">
+                  <span aria-hidden="true">☑</span>
+                  <div>
+                    <strong>One more look before you film</strong>
+                    <p>
+                      Check your facts, read it aloud, and make the words your
+                      own.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="preview-column">
+                <div class="preview-label">REEL PREVIEW <span>9:16</span></div>
+                <div class="phone">
+                  <div class="phone-top">
+                    <span id="reel-brand">MONDAY MADE SIMPLE</span
+                    ><span>•••</span>
+                  </div>
+                  <div class="reel-graphic">
+                    <div class="paper">
+                      <div class="paper-caption">THE FRIDAY RESET</div>
+                      <div class="paper-line">
+                        <span>01</span> Delivered <i>✓</i>
+                      </div>
+                      <div class="paper-line">
+                        <span>02</span> Blocked <i>○</i>
+                      </div>
+                      <div class="paper-line">
+                        <span>03</span> First move <i>↗</i>
+                      </div>
+                    </div>
+                    <span class="graphic-spark spark-one">✳</span
+                    ><span class="graphic-spark spark-two">+</span>
+                  </div>
+                  <div class="reel-caption" id="reel-text">
+                    Before you close<br />your laptop Friday.
+                  </div>
+                  <div class="phone-bottom">
+                    <span id="reel-time">00:00 / 00:30</span
+                    ><button id="play" aria-label="Play storyboard preview">
+                      ▶
+                    </button>
+                  </div>
+                  <div class="progress-track"><div id="progress"></div></div>
+                </div>
+                <p class="preview-hint">
+                  Animated storyboard preview<br />Final video rendering comes
+                  next.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <footer class="page-footer">
+          <span
+            ><span class="footer-mark">✳</span> A clear brief. An original
+            story. Your voice.</span
+          ><span>Preview only · No account connections</span>
+        </footer>
+        <div id="status" class="toast" role="status" aria-live="polite"></div>
+      </main>
+    </div>
+  </body>
 </html>
