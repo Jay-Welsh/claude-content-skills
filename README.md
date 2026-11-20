@@ -1,3 +1,5 @@
+> **Content Studio pilot** — Start with the [drafting workflow](content-studio/README.md), [brand brief](content-studio/BRAND-BRIEF.md), and [sample reel](content-studio/EXAMPLE.md). Account integrations require separate implementation and review.
+
 # Claude Content Skills
 
 **Free, copy-paste Claude skills that run your content growth factory** — turn ideas (and your Obsidian memory) into scroll-stopping Instagram reels: hooks, scripts, repurposing, captions, and a 2-week posting calendar.
