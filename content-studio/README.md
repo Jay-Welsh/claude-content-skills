@@ -2,6 +2,8 @@
 
 This local pilot adapts the hook, scripting, storyboard, and caption stages of [Claude Content Skills at 691875a](https://github.com/Jay-Welsh/claude-content-skills/commit/691875ac3eafaf84ec0bdb0283728c85d2cb3413). See LICENSE for the upstream notice.
 
+Try the [interactive web preview](../web-preview/README.md) to explore the brief form, storyboard, hook selection, and reel playback mockup.
+
 ## First run
 
 1. Fill out BRAND-BRIEF.md with one offer, one audience, and one real topic. Use public or sanitized reference material.
