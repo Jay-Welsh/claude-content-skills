@@ -1,5 +1,9 @@
 const form = document.querySelector("#brief-form");
-const defaults = Object.fromEntries(new FormData(form));
+const defaults = Object.fromEntries(
+  Array.from(form.elements)
+    .filter((field) => field.name)
+    .map((field) => [field.name, field.placeholder || field.value]),
+);
 const voices = {
   "Direct & practical": {
     opener: "Let’s make this practical",
