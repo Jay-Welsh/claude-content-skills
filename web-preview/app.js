@@ -3,95 +3,92 @@ const defaults = Object.fromEntries(new FormData(form));
 const voices = {
   "Direct & practical": {
     opener: "Let’s make this practical",
-    friday: "Before you close your laptop Friday, write these three lines.",
+    friday:
+      "Monday morning. Ten tabs open, and you still don’t know where to start.",
   },
   "Warm & conversational": {
     opener: "Let’s talk about something you might find helpful",
-    friday:
-      "Before you head into the weekend, let’s give Monday a little breathing room.",
+    friday: "Ever open your laptop Monday and feel pulled in every direction?",
   },
   "Bold & energetic": {
     opener: "Ready to put this into action? Here’s the starting point",
-    friday: "Close the week with a plan. Three lines, then you’re done.",
+    friday:
+      "Monday. A full inbox. A growing list. Still stuck choosing your first move?",
   },
   Inspirational: {
     opener: "A small beginning can give you a direction. Start here",
     friday:
-      "Give your next Monday a little direction with three lines this Friday.",
+      "You have ideas worth working on. Does Monday get swallowed by deciding where to begin?",
   },
   Empowering: {
     opener: "You get to choose your next step. Let’s explore",
     friday:
-      "You can decide how you start Monday. Take five minutes to choose your first move.",
+      "Does a crowded Monday leave you reacting to everyone else’s priorities?",
   },
   "Educational & clear": {
     opener: "Let’s break this down, one step at a time",
     friday:
-      "A Friday review has three parts. Here’s what to write for each one.",
+      "A full task list can leave your next action unclear. Does that describe your Monday?",
   },
   "Expert & confident": {
     opener: "Start with a clear process for",
     friday:
-      "Give your weekly review a clear structure. Capture delivery, blockers, and next actions.",
+      "Your Monday task list is full, but the next action is still undefined.",
   },
   "Playful & witty": {
     opener: "Let’s give this idea a little less head-scratching",
-    friday: "Leave Monday a note. Future you has enough tabs open already.",
+    friday:
+      "Ten tabs open on Monday, and somehow none of them knows what you should do first.",
   },
   "Empathetic & reassuring": {
     opener: "If this feels like a lot, start with one manageable step",
     friday:
-      "If this week felt scattered, take a breath. Start your review with three simple lines.",
+      "If Monday feels overwhelming before you’ve begun, choosing a first step can feel like another task.",
   },
   "Calm & reflective": {
     opener: "Take a moment to consider",
     friday:
-      "Before the week ends, pause. What did you finish, and what will you carry forward?",
+      "Notice how Monday begins. Is there space to focus, or a list pulling you in every direction?",
   },
   "Thought-provoking": {
     opener: "What would you reconsider about",
-    friday:
-      "What if your Monday plan began with the things you leave unfinished on Friday?",
+    friday: "How much of your Monday goes into deciding what Monday is for?",
   },
   "Personal & storytelling": {
     opener: "Picture a familiar moment. It brings us to",
     friday:
-      "Picture Friday afternoon. Your laptop is still open, and Monday is already on your mind.",
+      "Picture Monday morning. Your inbox is full, and you’ve opened the same unfinished list again.",
   },
 };
+const beatEnds = [0.2, 0.47, 1];
 const sampleBeats = [
   {
-    name: "The hook",
-    line: "Before you close your laptop Friday, write these three lines.",
-    shot: "Close-up of a pen drawing three lines.",
-    overlay: "Before you close your laptop Friday.",
+    name: "The problem",
+    line: "Monday morning. Ten tabs open, and you still don’t know where to start.",
+    shot: "Show a staged inbox and an unfinished task list. Keep client details fictional.",
+    overlay: "Monday. Where do you even start?",
   },
   {
-    name: "The first check",
-    line: "First, what did you finish? Name one thing a client can actually use.",
-    shot: "Write “proposal sent” on line one.",
-    overlay: "What did you deliver?",
+    name: "Make it bigger",
+    line: "You reread messages, rebuild your list, and spend the morning deciding what needs attention. The work is still waiting.",
+    shot: "Cut between the same tabs, a growing list, and a clock moving forward.",
+    overlay: "More time deciding. Work still waiting.",
   },
   {
-    name: "The second check",
-    line: "Second, what’s blocked? Write down who you’re waiting on and what you need.",
-    shot: "Point to “budget approval” on line two.",
-    overlay: "What’s still blocked?",
+    name: "The solution",
+    line: "Try a five-minute Friday review. Write what’s delivered, what’s blocked, and your next action. Put that action on Monday’s calendar. Save this for Friday.",
+    shot: "Close the extra tabs. Write the three checks and place one action in a fictional calendar.",
+    overlay: "Choose Monday’s first move on Friday.",
   },
-  {
-    name: "The next move",
-    line: "Third, what’s your first move Monday? Put it on the calendar before you sign off. Save this for Friday.",
-    shot: "Block a calendar slot using fictional project details.",
-    overlay: "Make your first move.",
-  },
+];
+const sampleHooks = [
+  sampleBeats[0].line,
+  "Does Monday start with a full inbox and no clear first move?",
+  "Your laptop is open. Your task list is growing. Where do you start?",
 ];
 let brief = { ...defaults };
 let beats = sampleBeats.map((beat) => ({ ...beat }));
-let hooks = [
-  "Before you close your laptop Friday, write these three lines.",
-  "Start Monday with one decision already made.",
-  "Your Monday list starts with what you stop doing Friday.",
-];
+let hooks = [...sampleHooks];
 let selectedHook = 0;
 let elapsed = 0;
 let timer;
@@ -117,10 +114,8 @@ function stopPlayback() {
 
 function updatePlayback() {
   const duration = Number(brief.duration);
-  const activeBeat = Math.min(
-    Math.floor((elapsed / duration) * beats.length),
-    beats.length - 1,
-  );
+  const nextBeat = beatEnds.findIndex((end) => elapsed < end * duration);
+  const activeBeat = nextBeat === -1 ? beats.length - 1 : nextBeat;
   document.querySelector("#reel-text").textContent = beats[activeBeat].overlay;
   const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
   const seconds = String(Math.floor(elapsed % 60)).padStart(2, "0");
@@ -181,7 +176,8 @@ function render() {
     title.textContent = beat.name;
     const time = document.createElement("span");
     const duration = Number(brief.duration);
-    time.textContent = `${Math.round((index * duration) / 4)}–${Math.round(((index + 1) * duration) / 4)} sec`;
+    const start = index === 0 ? 0 : beatEnds[index - 1];
+    time.textContent = `${Math.round(start * duration)}–${Math.round(beatEnds[index] * duration)} sec`;
     header.append(title, time);
     const spoken = document.createElement("p");
     spoken.textContent = `“${beat.line}”`;
@@ -234,55 +230,49 @@ form.addEventListener("submit", (event) => {
   brief = nextBrief;
   selectedHook = 0;
   isExample =
-    brief.topic === defaults.topic && brief.audience === defaults.audience;
+    brief.topic === defaults.topic &&
+    brief.audience === defaults.audience &&
+    brief.pain === defaults.pain;
   if (isExample) {
     beats = sampleBeats.map((beat) => ({ ...beat }));
-    beats[3].line = `Third, what’s your first move Monday? Put it on the calendar before you sign off. ${brief.cta}`;
-    hooks = [
-      sampleBeats[0].line,
-      "Start Monday with one decision already made.",
-      "Your Monday list starts with what you stop doing Friday.",
-    ];
+    beats[2].line = `Try a five-minute Friday review. Write what’s delivered, what’s blocked, and your next action. Put that action on Monday’s calendar. ${brief.cta}`;
+    hooks = [...sampleHooks];
   } else {
     hooks = [
-      `Let’s make this practical: ${brief.topic}`,
-      `One useful question for ${brief.audience}: where would you start?`,
-      `Here’s a simple way to think about ${brief.topic.replace(/[.!?]+$/, "")}.`,
+      brief.pain,
+      `Does this feel familiar? ${brief.pain}`,
+      `For ${brief.audience}, here’s a problem worth addressing. ${brief.pain}`,
     ];
     beats = [
       {
-        name: "The hook",
+        name: "The problem",
         line: hooks[0],
-        shot: "Show the situation using a staged example.",
-        overlay: brief.topic,
+        shot: "Show the audience’s problem in one recognizable, staged moment.",
+        overlay: brief.pain,
       },
       {
-        name: "Make it specific",
-        line: `If you’re part of this audience — ${brief.audience} — start with one real situation you recognize.`,
-        shot: "Replace this placeholder with one audience-specific example.",
-        overlay: "Start with a real situation.",
+        name: "Make it bigger",
+        line: "[Add one real consequence of this problem, then show how it affects the viewer’s day. Use details you can support.]",
+        shot: "Show the consequence. Use a second concrete example to build the stakes without invented numbers or fear claims.",
+        overlay: "[The real consequence]",
       },
       {
-        name: "Give them a next step",
-        line: "Explain one action the viewer can take. Add your supported advice here, then show it in practice.",
-        shot: "Demonstrate the actual step. Check every claim.",
-        overlay: "Show one useful step.",
-      },
-      {
-        name: "The invitation",
-        line: brief.cta,
-        shot: "End with the same action written clearly on screen.",
+        name: "The solution",
+        line: `[Explain how the approach in this topic addresses that problem: ${brief.topic}] [Demonstrate one practical first step.] ${brief.cta}`,
+        shot: "Show the solution in action, the first step, and the approved call to action.",
         overlay: brief.cta,
       },
     ];
   }
   const voice = voices[brief.voice];
   if (brief.voice !== defaults.voice) {
-    hooks[0] = isExample ? voice.friday : `${voice.opener}: ${brief.topic}`;
-    hooks[1] = `${voice.opener}: ${isExample ? "your first move on Monday" : brief.topic}`;
+    hooks[0] = isExample ? voice.friday : `${brief.pain} ${voice.opener}.`;
+    hooks[1] = isExample
+      ? sampleHooks[1]
+      : `Does this feel familiar? ${brief.pain}`;
     hooks[2] = isExample
-      ? `${voice.friday} ${brief.cta}`
-      : `${voice.opener}. What does this look like for ${brief.audience}?`;
+      ? sampleHooks[2]
+      : `${brief.pain} What does this cost you in your day?`;
     beats[0].line = hooks[0];
     beats[0].overlay = hooks[0];
   }
@@ -295,11 +285,7 @@ document.querySelector("#reset").addEventListener("click", () => {
   form.reset();
   brief = { ...defaults };
   beats = sampleBeats.map((beat) => ({ ...beat }));
-  hooks = [
-    sampleBeats[0].line,
-    "Start Monday with one decision already made.",
-    "Your Monday list starts with what you stop doing Friday.",
-  ];
+  hooks = [...sampleHooks];
   isExample = true;
   selectedHook = 0;
   selectTab("story");
@@ -364,6 +350,8 @@ document.querySelector("#download").addEventListener("click", () => {
     `# ${brief.business} — sample reel`,
     `Topic: ${brief.topic}`,
     `Audience: ${brief.audience}`,
+    `Problem: ${brief.pain}`,
+    "Structure: Problem → Make it bigger → Solution",
     `Voice: ${brief.voice}`,
     `Target duration: ${brief.duration} seconds`,
     "## Storyboard",
